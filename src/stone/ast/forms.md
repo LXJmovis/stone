@@ -2,11 +2,19 @@
 
 ###### BNF:
 
-factor:NUMBER|"("expression")"
+primary:"("expr")"|NUMBER|IDENTIFIER|STRING
 
-term:factor{("*"|"/")factor}
+factor:"-"primary|primary
 
-expression:term{("+"|"-")term}
+expr:factor{OP factor}
+
+block:"{"[statement]{(";"|EOL)[statement]}"}"
+
+simple:expr
+
+statement:"if" expr block ["else" block]|"while" expr block|simple
+
+program:\[statement](";"|EOL)
 
 > tips:
 >
@@ -15,18 +23,3 @@ expression:term{("+"|"-")term}
 > - pat1|pat2:match pat1 or pat2
 > - ():consider all contents of the parentheses as a complete pattern
 
- 
-
-###### Grammar:
-
-G[S]:
-
-​    S->A|A'
-
-​    A'->"+"AA'|"-"AA'|ε
-
-​    A->B|B'
-
-​    B'->"*"BB'|"/"BB'|ε
-
-​    B->number|"("S")"
